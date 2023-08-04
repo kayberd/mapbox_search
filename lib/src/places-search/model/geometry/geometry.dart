@@ -24,6 +24,3 @@ class Geometry {
   };
 }
 
-enum GeometryType { POINT }
-
-final geometryTypeValues = EnumValues({"Point": GeometryType.POINT});

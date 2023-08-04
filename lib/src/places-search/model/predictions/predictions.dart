@@ -34,4 +34,3 @@ class Predictions {
       };
 }
 
-enum FeatureType { FEATURE }

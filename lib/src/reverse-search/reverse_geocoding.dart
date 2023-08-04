@@ -31,8 +31,7 @@ class ReverseGeoCoding {
   /// For more information on the available types, see the [data types section](https://docs.mapbox.com/api/search/geocoding/#data-types).
   final List<PlaceType> types;
 
-  final Uri _baseUri =
-      Uri.parse('https://api.mapbox.com/geocoding/v5/mapbox.places/');
+  final Uri _baseUri = Uri.parse('https://api.mapbox.com/geocoding/v5/mapbox.places/');
 
   ReverseGeoCoding({
     required this.apiKey,
@@ -62,8 +61,7 @@ class ReverseGeoCoding {
 
   Future<List<MapBoxPlace>?> getAddress(Location location) async {
     // Assert that if limit is not null then only one type is passed
-    assert(limit != null && (types.length == 1) || limit == null,
-        'Limit is not null so you can only pass one type');
+    assert(limit != null && (types.length == 1) || limit == null, 'Limit is not null so you can only pass one type');
     Uri uri = _createUrl(location);
     final response = await http.get(uri);
 
