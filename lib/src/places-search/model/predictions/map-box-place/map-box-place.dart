@@ -92,7 +92,12 @@ final featureTypeValues = EnumValues({"Feature": FeatureType.FEATURE});
 
 extension MapBoxPlaceX on MapBoxPlace {
   String? get street {
-    return null;
+    if (placeType?.contains(PlaceType.address) == true && placeName != null && placeName!.contains(',')) {
+      final _streetAndHouseNumber = placeName!.split(',')[0];
+      return _streetAndHouseNumber.replaceAll(addressNumber ?? '', '').trim();
+    } else {
+      return null;
+    }
   }
 
   String? get postalCode {
