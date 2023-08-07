@@ -115,4 +115,12 @@ extension MapBoxPlaceX on MapBoxPlace {
       return null;
     }
   }
+
+  String? get country {
+    try {
+      return context?.firstWhere((element) => element.id?.contains('country') ?? false).text;
+    } catch (e) {
+      return null;
+    }
+  }
 }
