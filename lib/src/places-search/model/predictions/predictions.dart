@@ -17,7 +17,10 @@ class Predictions {
     this.query = [];
   }
 
-  factory Predictions.fromRawJson(String str) => Predictions.fromJson(json.decode(str));
+  factory Predictions.fromRawJson(String str) {
+    print("STR: $str");
+  return Predictions.fromJson(json.decode(str));
+}
 
   String toRawJson() => json.encode(toJson());
 
