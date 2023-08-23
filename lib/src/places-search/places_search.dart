@@ -108,7 +108,7 @@ class PlacesSearch {
       proximity = location ?? const LocationNone();
     }
     final _body = {'url': _createProxiedUrl(queryText).toString()};
-    final response = await http.post(proxy!, body: _body);
+    final response = await http.post(proxy!, body: _body, headers: {'Content-Type': 'multipart/form-data'});
 
     if (response.body.contains('message')) {
       throw Exception(json.decode(response.body)['message']);
