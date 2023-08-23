@@ -2,7 +2,7 @@ part of mapbox_search;
 
 class PlacesSearch {
   /// API Key of the MapBox.
-  final String apiKey;
+  final String? apiKey;
 
   /// Specify the user’s language. This parameter controls the language of the text supplied in responses.
   ///
@@ -34,7 +34,7 @@ class PlacesSearch {
   final Uri? proxy;
 
   PlacesSearch({
-    required this.apiKey,
+    this.apiKey,
     this.country,
     this.limit,
     this.language,
@@ -42,7 +42,7 @@ class PlacesSearch {
     this.bbox,
     this.proxy,
     this.autoComplete = true,
-  });
+  }) : assert(proxy != null ? apiKey == null : true);
 
   Uri _createUrl(String queryText, [Proximity proximity = const LocationNone()]) {
     final finalUri = Uri(
