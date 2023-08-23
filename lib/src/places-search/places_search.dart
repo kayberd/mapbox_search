@@ -31,6 +31,8 @@ class PlacesSearch {
 
   final Uri _baseUri = Uri.parse('https://api.mapbox.com/geocoding/v5/mapbox.places/');
 
+  final Uri? proxy;
+
   PlacesSearch({
     required this.apiKey,
     this.country,
@@ -38,13 +40,11 @@ class PlacesSearch {
     this.language,
     this.types,
     this.bbox,
+    this.proxy,
     this.autoComplete = true,
   });
 
-  Uri _createUrl(
-    String queryText, [
-    Proximity proximity = const LocationNone()
-  ]) {
+  Uri _createUrl(String queryText, [Proximity proximity = const LocationNone()]) {
     final finalUri = Uri(
       scheme: _baseUri.scheme,
       host: _baseUri.host,
@@ -53,6 +53,23 @@ class PlacesSearch {
         'access_token': apiKey,
         if (proximity is Location) 'proximity': proximity.asString,
         if (proximity is LocationIp) 'proximity': 'ip',
+        if (country != null) 'country': country,
+        if (limit != null) 'limit': limit.toString(),
+        if (language != null) 'language': language,
+        if (types != null) 'types': types?.map((e) => e.value).join(','),
+        if (bbox != null) 'bbox': bbox?.asString,
+        if (!autoComplete) 'autocomplete': 'false',
+      },
+    );
+    return finalUri;
+  }
+
+  Uri _createProxiedUrl(String queryText) {
+    final finalUri = Uri(
+      scheme: _baseUri.scheme,
+      host: _baseUri.host,
+      path: _baseUri.path + Uri.encodeFull(queryText) + '.json',
+      queryParameters: {
         if (country != null) 'country': country,
         if (limit != null) 'limit': limit.toString(),
         if (language != null) 'language': language,
@@ -74,6 +91,24 @@ class PlacesSearch {
     }
     final uri = _createUrl(queryText, proximity);
     final response = await http.get(uri);
+
+    if (response.body.contains('message')) {
+      throw Exception(json.decode(response.body)['message']);
+    }
+
+    return Predictions.fromRawJson(response.body).features;
+  }
+
+  Future<List<MapBoxPlace>?> getProxiedPlaces(
+    String queryText, {
+    @Deprecated('Use `proximity` instead, if `proximity` value is passed then it will be used and this value will be ignored') Location? location,
+    Proximity proximity = const LocationNone(),
+  }) async {
+    if (proximity is! Location) {
+      proximity = location ?? const LocationNone();
+    }
+    final _body = {'url': _createProxiedUrl(queryText).toString()};
+    final response = await http.post(proxy!, body: _body);
 
     if (response.body.contains('message')) {
       throw Exception(json.decode(response.body)['message']);
