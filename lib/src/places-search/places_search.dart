@@ -108,15 +108,14 @@ class PlacesSearch {
       proximity = location ?? const LocationNone();
     }
     final _body = {'url': _createProxiedUrl(queryText).toString()};
-    final response = await http.post(proxy!, body: _body, encoding: Encoding.getByName('utf-16'));
+    final response = await http.post(proxy!, body: _body);
 
-    print("RESPONSE BODY: ${response.body}");
 
     if (response.body.contains('message')) {
       throw Exception(json.decode(response.body)['message']);
     }
 
-    return Predictions.fromRawJson(response.body).features;
+    return Predictions.fromRawBytes(response.bodyBytes).features;
   }
 
   PlacesSearch copyWith({

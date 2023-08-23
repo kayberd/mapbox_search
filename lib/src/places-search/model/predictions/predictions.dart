@@ -17,10 +17,9 @@ class Predictions {
     this.query = [];
   }
 
-  factory Predictions.fromRawJson(String str) {
-    print("STR: $str");
-  return Predictions.fromJson(json.decode(str));
-}
+  factory Predictions.fromRawJson(String str) => Predictions.fromJson(json.decode(str));
+
+  factory Predictions.fromRawBytes(List<int> bytes) => Predictions.fromJson(json.decode(utf8.decode(bytes)));
 
   String toRawJson() => json.encode(toJson());
 
@@ -36,4 +35,3 @@ class Predictions {
         "features": List<dynamic>.from(features!.map((x) => x.toJson())),
       };
 }
-
