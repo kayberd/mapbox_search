@@ -110,6 +110,8 @@ class PlacesSearch {
     final _body = {'url': _createProxiedUrl(queryText).toString()};
     final response = await http.post(proxy!, body: _body);
 
+    print("RESPONSE BODY: ${response.body}");
+
     if (response.body.contains('message')) {
       throw Exception(json.decode(response.body)['message']);
     }
